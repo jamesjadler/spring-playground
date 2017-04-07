@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.Models.AreaRequest;
 import com.example.Models.BoxDimentions;
 import com.example.Models.Calculator;
 
@@ -79,5 +80,33 @@ public class MathService {
                 boxDimentions.getWidth(),
                 boxDimentions.getHeight(),
                 volume);
+    }
+
+    public String calculateArea(AreaRequest areaRequest) {
+
+        switch (areaRequest.getType().toUpperCase()) {
+
+            case "CIRCLE":
+                if (areaRequest.getRadius() != null) {
+                    Double area = Math.PI * (Math.pow(areaRequest.getRadius(), 2.0));
+                    return String.format("Area of a circle with a radius of %.0f is %.5f", areaRequest.getRadius(), area);
+                } else {
+                    return "Invalid";
+                }
+
+            case "RECTANGLE":
+                if (areaRequest.getHeight() != null && areaRequest.getWidth() != null){
+                    Double area = areaRequest.getHeight() * areaRequest.getWidth();
+                    return String.format("Area of a %.0fx%.0f rectangle is %.0f",areaRequest.getHeight(),areaRequest.getWidth(),area);
+                }else{
+                    return "Invalid";
+                }
+            default:
+                return "Invalid";
+
+
+        }
+
+
     }
 }

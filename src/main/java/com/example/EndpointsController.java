@@ -1,6 +1,7 @@
 package com.example;
 
 
+import com.example.Models.AreaRequest;
 import com.example.Models.BoxDimentions;
 import com.example.Models.Calculator;
 import org.springframework.util.MultiValueMap;
@@ -29,5 +30,10 @@ public class EndpointsController {
     @RequestMapping("/math/volume/{length}/{width}/{height}")
     public String getVolume(BoxDimentions boxDimentions) {
         return mathService.calculateVolume(boxDimentions);
+    }
+
+    @PostMapping("/math/area")
+    public String getArea(AreaRequest areaRequest){
+        return mathService.calculateArea(areaRequest);
     }
 }
