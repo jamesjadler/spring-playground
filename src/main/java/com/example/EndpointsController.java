@@ -26,8 +26,6 @@ public class EndpointsController {
         return mathService.calculateSum(queryString);
     }
 
-
-
     @RequestMapping("/math/volume/{length}/{width}/{height}")
     public String getVolume(BoxDimentions boxDimentions) {
         return mathService.calculateVolume(boxDimentions);

@@ -1,15 +1,12 @@
 package com.example;
 
-
 import com.example.Models.BoxDimentions;
 import com.example.Models.Calculator;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 import java.util.List;
-
 import static java.util.Arrays.asList;
 
 public class MathServiceTest {
@@ -47,6 +44,6 @@ public class MathServiceTest {
                 .build();
         String result = mathService.calculateVolume(boxDimentions);
         System.out.println(result);
-        Assert.assertEquals(result,"The volume of a 42x56x79 rectangle is 185808" );
+        Assert.assertEquals(result, "The volume of a 42x56x79 rectangle is 185808");
     }
 }
