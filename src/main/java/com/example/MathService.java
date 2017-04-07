@@ -1,8 +1,9 @@
 package com.example;
 
 
+import com.example.Models.BoxDimentions;
 import com.example.Models.Calculator;
-import org.springframework.util.MultiValueMap;
+
 
 import java.util.Map;
 
@@ -11,7 +12,7 @@ public class MathService {
     public MathService() {
     }
 
-    public String getCalculate(Calculator calculator) {
+    public String calculateWithOperator(Calculator calculator) {
         String operator = "";
         String result = "";
         switch (null == calculator.getOperation() ? "NULL" : calculator.getOperation().toUpperCase()) {
@@ -49,7 +50,7 @@ public class MathService {
         return Math.round(calculator.getX()) + " " + operator + " " + Math.round(calculator.getY()) + " = " + result;
     }
 
-    public String getSum(Map queryString) {
+    public String calculateSum(Map queryString) {
         StringBuilder sumString = new StringBuilder();
         long sum = 0;
 
@@ -73,4 +74,12 @@ public class MathService {
         return sumString + " = " + sum;
     }
 
+    public String calculateVolume(BoxDimentions boxDimentions) {
+        int volume = boxDimentions.getHeight() * boxDimentions.getLength() * boxDimentions.getWidth();
+        return String.format("The volume of a %dx%dx%d rectangle is %d",
+                boxDimentions.getLength(),
+                boxDimentions.getWidth(),
+                boxDimentions.getHeight(),
+                volume);
+    }
 }

@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Calculator {
-    private String operation;
-    private Double x;
-    private Double y;
+public class BoxDimentions {
+    private int length;
+    private int width;
+    private int height;
 }
