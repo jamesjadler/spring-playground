@@ -1,5 +1,7 @@
 package com.example;
 
+import com.example.Models.Flight;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omg.CORBA.DynAnyPackage.Invalid;
@@ -10,6 +12,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Collectors;
+
+import static com.jayway.jsonpath.internal.function.ParamType.JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -19,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(EndpointsController.class)
 public class EndpointsControllerTest {
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
     private MockMvc mvc;
@@ -73,7 +82,7 @@ public class EndpointsControllerTest {
     }
 
     @Test
-    public void testArea() throws Exception{
+    public void testArea() throws Exception {
         MockHttpServletRequestBuilder request1 = post("/math/area")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("type", "circle")
@@ -110,4 +119,25 @@ public class EndpointsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("Invalid"));
     }
+
+    @Test
+    public void getFlight() throws Exception {
+        String expected = "{\"Departs\":\"2017-04-21 20:34\",\"Tickets\":[{\"Passenger\":{\"FirstName\":\"Some name\",\"LastName\":\"Some other name\"},\"Price\":200}]}";
+
+        this.mvc.perform(get("/flights/flight").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
+
+    }
+
+    @Test
+    public void getFlights() throws Exception {
+        String expected = "[{\"Departs\":\"2017-04-21 20:34\",\"Tickets\":[{\"Passenger\":{\"FirstName\":\"Some name\",\"LastName\":\"Some other name\"},\"Price\":200}]},{\"Departs\":\"2017-04-21 20:34\",\"Tickets\":[{\"Passenger\":{\"FirstName\":\"Some other name\"},\"Price\":400}]}]";
+
+        this.mvc.perform(get("/flights").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
+
+    }
+
 }
