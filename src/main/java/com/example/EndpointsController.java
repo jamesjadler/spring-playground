@@ -1,10 +1,12 @@
 package com.example;
 
 
-import com.example.Models.AreaRequest;
-import com.example.Models.BoxDimentions;
-import com.example.Models.Calculator;
+import com.example.Models.*;
 import com.example.Models.Flight;
+import com.example.Models.FlightSum.*;
+import com.example.Models.Passenger;
+import com.example.Models.Result;
+import com.example.Models.Ticket;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,10 +54,10 @@ public class EndpointsController {
         Flight flight = null;
         try {
             flight = Flight.builder()
-                    .departs( new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                    .departs(new SimpleDateFormat("yyyy-MM-dd HH:mm")
                             .parse("2017-04-21 14:34"))
-                    .tickets(Arrays.asList(Flight.Ticket.builder()
-                            .passenger(Flight.Passenger.builder()
+                    .tickets(Arrays.asList(Ticket.builder()
+                            .passenger(Passenger.builder()
                                     .firstName("Some name")
                                     .lastName("Some other name")
                                     .build())
@@ -75,10 +77,10 @@ public class EndpointsController {
         List<Flight> flights = new ArrayList<>();
         try {
             flights.add(Flight.builder()
-                    .departs( new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                    .departs(new SimpleDateFormat("yyyy-MM-dd HH:mm")
                             .parse("2017-04-21 14:34"))
-                    .tickets(Arrays.asList(Flight.Ticket.builder()
-                            .passenger(Flight.Passenger.builder()
+                    .tickets(Arrays.asList(Ticket.builder()
+                            .passenger(Passenger.builder()
                                     .firstName("Some name")
                                     .lastName("Some other name")
                                     .build())
@@ -87,10 +89,10 @@ public class EndpointsController {
                     .build());
 
             flights.add(Flight.builder()
-                    .departs( new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                    .departs(new SimpleDateFormat("yyyy-MM-dd HH:mm")
                             .parse("2017-04-21 14:34"))
-                    .tickets(Arrays.asList(Flight.Ticket.builder()
-                            .passenger(Flight.Passenger.builder()
+                    .tickets(Arrays.asList(Ticket.builder()
+                            .passenger(Passenger.builder()
                                     .firstName("Some other name")
                                     .build())
                             .price(400)
@@ -101,5 +103,19 @@ public class EndpointsController {
         }
         System.out.println(flights.toString());
         return flights;
+    }
+
+    @PostMapping("/flights/tickets/total")
+    public Result getFlightsPriceTotal(@RequestBody com.example.Models.FlightSum.Tickets ticketList) {
+        Result result = Result.builder().result(0).build();
+        int sum = 0;
+        System.out.println(ticketList.toString());
+        for (com.example.Models.FlightSum.Ticket ticket : ticketList.getTickets()) {
+            System.out.println(ticket.toString());
+            result.setResult(sum += ticket.getPrice());
+        }
+        result.setResult(sum);
+        System.out.println(sum);
+        return result;
     }
 }

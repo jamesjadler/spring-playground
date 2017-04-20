@@ -25,6 +25,7 @@ repositories {
 dependencies {
     compile(
             'org.springframework.boot:spring-boot-starter-web',
+            'com.google.code.gson:gson:2.8.0',
             'org.projectlombok:lombok:1.16.16'
     )
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'

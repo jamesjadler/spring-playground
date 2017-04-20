@@ -1,7 +1,12 @@
 package com.example;
 
 import com.example.Models.Flight;
+import com.example.Models.FlightSum.Tickets;
+import com.example.Models.Passenger;
+import com.example.Models.Ticket;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.*;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.omg.CORBA.DynAnyPackage.Invalid;
@@ -15,6 +20,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.jayway.jsonpath.internal.function.ParamType.JSON;
@@ -140,4 +149,92 @@ public class EndpointsControllerTest {
 
     }
 
+    @Test
+    public void getFlightsPriceTotal_StringLiteral() throws Exception {
+        String body = "  {\n" +
+                "  \t\"tickets\": [{\n" +
+                "  \t\t\"passenger\": {\n" +
+                "  \t\t\t\"firstName\": \"Some name\",\n" +
+                "  \t\t\t\"lastName\": \"Some other name\"\n" +
+                "  \t\t},\n" +
+                "  \t\t\"price\": 200\n" +
+                "  \t}, {\n" +
+                "  \t\t\"passenger\": {\n" +
+                "  \t\t\t\"firstName\": \"Name B\",\n" +
+                "  \t\t\t\"lastName\": \"Name C\"\n" +
+                "  \t\t},\n" +
+                "  \t\t\"price\": 150\n" +
+                "  \t}]\n" +
+                "  }";
+        String expected = "" +
+                "{" +
+                "\"result\":350" +
+                "}";
+
+        MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
+    }
+
+    @Test
+    public void getFlightsPriceTotal_Gson() throws Exception {
+        Tickets tickets = Tickets.builder().tickets(
+                Arrays.asList(com.example.Models.FlightSum.Ticket.builder()
+                                .passenger(com.example.Models.FlightSum.Passenger.builder()
+                                        .firstName("Some name")
+                                        .lastName("Some other name")
+                                        .build())
+                                .price(100)
+                                .build(),
+
+                        com.example.Models.FlightSum.Ticket.builder()
+                                .passenger(com.example.Models.FlightSum.Passenger.builder()
+                                        .firstName("Some name")
+                                        .lastName("Some other name")
+                                        .build())
+                                .price(100)
+                                .build())).build();
+
+        Gson g = new Gson();
+        String str = g.toJson(tickets);
+        System.out.println("GSON parse: " + str);
+        String expected = "" +
+                "{" +
+                "\"result\":200" +
+                "}";
+
+        MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(str);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
+    }
+
+    @Test
+    public void getFlightsPriceTotal_Fixture() throws Exception {
+        String json = getJSON("/FlightSumRequest.json");
+        String expected = "" +
+                "{" +
+                "\"result\":350" +
+                "}";
+
+        MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        this.mvc.perform(request)
+                .andExpect(status().isOk())
+                .andExpect(content().string(expected));
+    }
+
+    private String getJSON(String path) throws Exception {
+        URL url = this.getClass().getResource(path);
+        return new String(Files.readAllBytes(Paths.get(url.getFile())));
+    }
 }
