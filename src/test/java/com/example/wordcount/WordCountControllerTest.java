@@ -1,5 +1,6 @@
 package com.example.wordcount;
 
+import com.example.Models.config.WordCountConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ public class WordCountControllerTest {
     @Autowired
     MockMvc mvc;
 
+    @Autowired
+    WordCountConfig config;
 
     @Test
     public void test() throws Exception {
@@ -36,7 +39,6 @@ public class WordCountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.this", is(1)))
                 .andExpect(jsonPath("$.is", is(1)))
-                .andExpect(jsonPath("$.a", is(1)))
                 .andExpect(jsonPath("$.test", is(3)));
 
 
