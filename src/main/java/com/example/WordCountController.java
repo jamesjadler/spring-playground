@@ -15,6 +15,8 @@ public class WordCountController {
     @Autowired
     WordCount wordCount;
 
+
+
     @PostMapping("/count")
     public Map<String,Integer> getWordCount(@RequestBody String request){
         return wordCount.count(request);
